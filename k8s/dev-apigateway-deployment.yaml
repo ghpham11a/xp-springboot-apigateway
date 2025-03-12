@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xp-springboot-apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xp-springboot-apigateway
+  template:
+    metadata:
+      labels:
+        app: xp-springboot-apigateway
+    spec:
+      containers:
+        - name: xp-springboot-apigateway
+          image: xp-springboot-apigateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: xp-apigateway-configmap
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
