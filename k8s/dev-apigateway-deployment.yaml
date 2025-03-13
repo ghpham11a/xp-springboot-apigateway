@@ -17,10 +17,10 @@ spec:
           image: xp-springboot-apigateway:latest
           imagePullPolicy: Never
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           envFrom:
             - configMapRef:
-                name: xp-apigateway-configmap
+                name: xp-springboot-apigateway-configmap
           env:
             - name: POD_NAME
               valueFrom:

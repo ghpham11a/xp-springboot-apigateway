@@ -34,7 +34,16 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        //.pathMatchers("/public/**").permitAll()
+                        // Allow GET requests on /api/accounts/** without authentication
+                        .pathMatchers(HttpMethod.GET, "/api/accounts", "/api/accounts/").permitAll()
+
+                        // Any POST requests (or other methods) on /api/accounts/** need authentication
+                        .pathMatchers(HttpMethod.GET, "/api/accounts/**").authenticated()
+                        .pathMatchers(HttpMethod.POST, "/api/accounts/**").authenticated()
+                        .pathMatchers(HttpMethod.PATCH, "/api/accounts/**").authenticated()
+                        .pathMatchers(HttpMethod.DELETE, "/api/accounts/**").authenticated()
+
+                        // Anything else is authenticated by default
                         .anyExchange().authenticated()
                 )
                 // Insert your custom filter before Spring Security's Authentication phase
@@ -49,6 +58,7 @@ public class SecurityConfig {
     @Bean
     public WebFilter customWebFilter() {
         return (exchange, chain) -> {
+
             // Always add this response header for all requests
             exchange.getResponse().getHeaders().add("X-Response-Inspected", "true");
 

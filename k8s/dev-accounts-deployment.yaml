@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xp-springboot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xp-springboot
+  template:
+    metadata:
+      labels:
+        app: xp-springboot
+    spec:
+      containers:
+        - name: xp-springboot
+          image: xp-springboot:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
